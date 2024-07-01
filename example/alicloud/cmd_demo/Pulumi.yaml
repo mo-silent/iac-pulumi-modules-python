@@ -1,0 +1,42 @@
+name: aliyun-test
+runtime: 
+  name: python
+  options:
+    virtualenv: .venv
+description: test aliyun
+version: 0.0.1-beta
+config:
+  # define alicloud provider
+  # alicloud:region: "cn-shanghai"
+  pulumi:tags:
+    value:
+      pulumi:template: ""
+# main: module-file/
+# stackConfigDir: config/
+# backend:
+#   url: azblob://pulumi-state-poc?domain=blob.core.chinacloudapi.cn
+options:
+ refresh: always
+template:
+  displayName: Example Template
+  description: An example template
+  config:
+    metadata:
+      cloud: alicloud
+    alicloud:region:
+      description: The Alicloud region to deploy into
+      default: cn-shenzhen
+      secret: false 
+# plugins:
+#   providers:
+#     - name: alicloud
+#       path: ../../bin
+#       version: 
+#   languages:
+#     - name: python
+#       path: ../../../pulumi-yaml/bin
+#       version: 
+#   analyzers:
+#     - name: yaml
+#       path: ../../../pulumi-yaml/bin
+#       version: 

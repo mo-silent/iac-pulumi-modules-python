@@ -1,0 +1,155 @@
+config:
+  alicloud:
+    global:
+      backend: 
+        enabled: false
+      variables:
+        bu: "devops"
+        shourt_bu: "dps"
+        env: "qa"
+        project: "test"
+        assume_role:
+          role_arn: acs:ram::1521538100145635:role/aliyunresourceadmin
+          session_name: "pulumi-test"
+        tags:
+          Bu: "devops"
+          Environment: "qa"
+    resources:
+      rg:
+        - name: "tran-qa-cnsh-network-rg-0"
+          enabled: true
+      vpc:
+        - name: "tran-qa-cnsh-network-vpc-0"
+          enabled: false
+          region: cn-shanghai
+          version: 3.55.1
+          cidr_block: "10.126.131.0/26"
+          user_cidrs: null
+          classic_link_enabled: null
+          description: null
+          dry_run: false
+          enable_ipv6: null
+          ipv4_ipam_pool_id: null
+          ipv6_isp: null
+      oss:
+        - name: "tran-qa-cnsh-silent-oss-0"
+          enabled: false
+          region: cn-shanghai
+          version: 3.55.1
+          bucket: "tran-qa-cnsh-silent-oss-0"
+          storage_class: Standard # [Standard(default),IA,Archive,ColdArchive,DeepColdArchive]
+          force_destroy: false
+          lifecycle_rule_allow_same_action_overlap: false
+          # block
+          access_monitor:
+            enabled: true
+            status: "Enabled"
+          cors_rules:
+            enabled: false
+            cors_rules:
+              - allowed_menthods: ["GET"] # ["GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS"]
+                allowed_origins: ["*"]
+                allowed_headers: ["*"]
+                expose_headers: null
+                max_age_seconds: 300
+          lifecycle_rules:
+            enabled: false
+            lifecycle_rules:
+              - enabled: true
+                prefix: "test/"
+                tags: null
+                expirations:
+                  enabled: true
+                  expirations:
+                    - date: null
+                      days: 1
+                      create_before_date: null
+                      expiration_date: null
+          server_side_encryption_rule:
+            enabled: true
+            sse_algorithm: "AES256"
+            kms_master_key_id: null
+          transfer_acceleration:
+            enabled: true
+          versioning:
+            enabled: true
+            status: "Enabled"
+          # sub resources
+          subresource:
+            acl: 
+              - enabled: true
+                acl: "private"
+            https_config:
+              - enabled: true
+                enable: true
+                tls_versions: ["TLSv1.2","TLSv1.3"]
+            policy:
+              - enabled: true
+                policy_file: null # policy file is required when policy is null
+                policy: |
+                  {
+                    "Version": "1",
+                    "Statement": [
+                      {
+                        "Effect": "Allow",
+                        "Principal": "*",
+                        "Action": "oss:GetObject",
+                        "Resource": "acs:oss:*:*:*/*"
+                      }
+                    ]
+                  }
+        - name: "tran-qa-cnsh-silent-oss-1"
+          enabled: true
+          region: cn-shanghai
+          version: 3.55.1
+          bucket: "tran-qa-cnsh-silent-oss-1"
+          storage_class: Standard # [Standard(default),IA,Archive,ColdArchive,DeepColdArchive]
+          force_destroy: false
+          lifecycle_rule_allow_same_action_overlap: false
+          # block
+          access_monitor:
+            enabled: true
+            status: "Enabled"
+          cors_rules:
+            enabled: false
+            cors_rules:
+              - allowed_menthods: ["GET"] # ["GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS"]
+                allowed_origins: ["*"]
+                allowed_headers: ["*"]
+                expose_headers: null
+                max_age_seconds: 300
+          lifecycle_rules:
+            enabled: false
+            lifecycle_rules:
+              - enabled: true
+                prefix: "test/"
+                tags: null
+                expirations:
+                  enabled: true
+                  expirations:
+                    - date: null
+                      days: 1
+                      create_before_date: null
+                      expiration_date: null
+          server_side_encryption_rule:
+            enabled: true
+            sse_algorithm: "AES256"
+            kms_master_key_id: null
+          transfer_acceleration:
+            enabled: true
+          versioning:
+            enabled: true
+            status: "Enabled"
+          # sub resources
+          subresource:
+            acl: 
+              - enabled: true
+                acl: "private"
+            https_config:
+              - enabled: true
+                enable: true
+                tls_versions: ["TLSv1.2","TLSv1.3"]
+            policy:
+              - enabled: true
+                policy_file: tran-qa-cnsh-cloud-oss-1.json # policy file is required when policy is null
+                policy: null 

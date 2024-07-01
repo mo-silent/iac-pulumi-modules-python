@@ -1,0 +1,164 @@
+global:
+  backend: 
+    enabled: false
+  variables:
+    bu: "sanbox"
+    shourt_bu: "dps"
+    env: "qa"
+    project: "cloud"
+    assume_role:
+      role_arn: acs:ram::1521538100145635:role/aliyunresourceadmin
+      session_name: "pulumi-test"
+    tags:
+      Bu: "sanbox"
+      Environment: "qa"
+resources:
+  rg:
+    - name: "sanbox-qa-cnsh-silent-rg-0"
+      enabled: true
+    - name: "sanbox-qa-cnsh-silent-rg-1"
+      enabled: true
+  oss:
+    - name: "sanbox-qa-cnsh-silent-oss-0"
+      rg_id:
+        depends_on: organization/aliyun-test/qa #stack name. If current stack, set null
+        name: 
+          - sanbox-qa-cnsh-silent-rg-0 # depends resources value
+      enabled: false
+      region: cn-shanghai
+      version: 3.55.1
+      bucket: "sanbox-qa-cnsh-silent-oss-0"
+      storage_class: Standard # [Standard(default),IA,Archive,ColdArchive,DeepColdArchive]
+      force_destroy: false
+      lifecycle_rule_allow_same_action_overlap: false
+      # ignore_changes
+      ignore_changes:
+        - tags
+      # block
+      access_monitor:
+        enabled: true
+        status: "Enabled"
+      cors_rules:
+        enabled: false
+        cors_rules:
+          - allowed_menthods: ["GET"] # ["GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS"]
+            allowed_origins: ["*"]
+            allowed_headers: ["*"]
+            expose_headers: null
+            max_age_seconds: 300
+      lifecycle_rules:
+        enabled: false
+        lifecycle_rules:
+          - enabled: true
+            prefix: "test/"
+            tags: null
+            expirations:
+              enabled: true
+              expirations:
+                - date: null
+                  days: 1
+                  create_before_date: null
+                  expiration_date: null
+      server_side_encryption_rule:
+        enabled: true
+        sse_algorithm: "AES256"
+        kms_master_key_id: null
+      transfer_acceleration:
+        enabled: true
+      versioning:
+        enabled: true
+        status: "Enabled"
+      # sub resources
+      subresource:
+        acl: 
+          - enabled: true
+            acl: "private"
+        https_config:
+          - enabled: true
+            enable: true
+            tls_versions: ["TLSv1.2","TLSv1.3"]
+        policy:
+          - enabled: true
+            policy_file: null # policy file is required when policy is null
+            policy: |
+              {
+                "Version": "1",
+                "Statement": [
+                  {
+                    "Effect": "Allow",
+                    "Principal": "*",
+                    "Action": "oss:GetObject",
+                    "Resource": "acs:oss:*:*:*/*"
+                  }
+                ]
+              }
+    - name: "sanbox-qa-cnsh-silent-oss-1"
+      rg_id:
+        depends_on: null #stack name. If current stack, set null
+        name: 
+          - sanbox-qa-cnsh-silent-rg-1 # depends resources value
+        # rg_id: null # Placeholders that users do not need to fill in
+      enabled: true
+      region: cn-shanghai
+      version: 3.55.1
+      bucket: "sanbox-qa-cnsh-silent-oss-1"
+      storage_class: Standard # [Standard(default),IA,Archive,ColdArchive,DeepColdArchive]
+      force_destroy: false
+      lifecycle_rule_allow_same_action_overlap: false
+      # block
+      access_monitor:
+        enabled: true
+        status: "Enabled"
+      cors_rules:
+        enabled: false
+        cors_rules:
+          - allowed_menthods: ["GET"] # ["GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS"]
+            allowed_origins: ["*"]
+            allowed_headers: ["*"]
+            expose_headers: null
+            max_age_seconds: 300
+      lifecycle_rules:
+        enabled: true
+        lifecycle_rules:
+          - enabled: true
+            prefix: "test/"
+            tags: null
+            expirations:
+              enabled: true
+              expirations:
+                - date: null
+                  days: 1
+                  create_before_date: null
+                  expired_object_delete_marker: null
+          - enabled: false
+            prefix: null
+            tags: null
+            expirations:
+              enabled: true
+              expirations:
+                - date: null
+                  days: 5
+                  create_before_date: null
+                  expired_object_delete_marker: null
+      server_side_encryption_rule:
+        enabled: true
+        sse_algorithm: "AES256"
+        kms_master_key_id: null
+      transfer_acceleration:
+        enabled: true
+      versioning:
+        enabled: true
+        status: "Enabled"
+      # sub resources
+      subresource:
+        acl: 
+          - enabled: true
+            acl: "private"
+        https_config:
+          - enabled: true
+            enable: true
+            tls_versions: ["TLSv1.2","TLSv1.3"]
+        policy:
+          - enabled: true
+            policy_file: tran-qa-cnsh-cloud-oss-1.json # policy file is required when policy is null
+            policy: null 

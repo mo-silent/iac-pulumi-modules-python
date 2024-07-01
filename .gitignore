@@ -1,0 +1,5 @@
+__pycache__/
+.*/__pycache__/
+.venv
+stack_dependency.py
+Pulumi.*.yaml

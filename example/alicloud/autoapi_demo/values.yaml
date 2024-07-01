@@ -1,0 +1,27 @@
+global:
+  backend: 
+    enabled: false
+  variables:
+    bu: "devops"
+    shourt_bu: "dps"
+    env: "qa"
+    rack_zone: "cnsh"
+    project: "test"
+    tags:
+      Bu: "devops"
+      Environment: "qa"
+resources:
+  rg:
+    name: "rg-0"
+    enabled: true 
+  vpc:
+    - name: "vpc-0"
+      enabled: true
+      cidr_block: "10.126.131.0/26"
+      user_cidrs: null
+      classic_link_enabled: null
+      description: null
+      dry_run: false
+      enable_ipv6: null
+      ipv4_ipam_pool_id: null
+      ipv6_isp: null
